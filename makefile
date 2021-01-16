@@ -1,5 +1,8 @@
-dist/mbot.zip: lambda_function.py $(shell find mbot -type f) requirements.txt
+dist/packages.installed: requirements.txt
 	pip install --target dist/packages -r requirements.txt
+	touch dist/packages.installed
+
+dist/mbot.zip: dist/packages.installed lambda_function.py $(shell find mbot -type f)
 	rm -f dist/mbot.zip
 	cd dist/packages; zip -r ../mbot.zip *
 	zip -r dist/mbot.zip lambda_function.py
