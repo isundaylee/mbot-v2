@@ -3,6 +3,9 @@ import logging
 import requests
 
 
+logger = logging.getLogger("mbot.messenger")
+
+
 class MessengerClient:
     def __init__(self, access_token):
         self.access_token = access_token
@@ -16,8 +19,6 @@ class MessengerClient:
             json={"recipient": {"id": recipient_id}, "message": {"text": message}},
         )
 
-        logging.info(
-            "Messenger_Client.send_message response: {} {}".format(
-                resp.status_code, resp.json()
-            )
+        logger.info(
+            "send_message() got response: {} {}".format(resp.status_code, resp.json())
         )

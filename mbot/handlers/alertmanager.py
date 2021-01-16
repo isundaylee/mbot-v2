@@ -4,6 +4,9 @@ import os
 from mbot.messenger import MessengerClient
 
 
+logger = logging.getLogger("mbot.handlers.alertmanager")
+
+
 def do_alertmanager(event):
     data = event["json"]["body"]
 
@@ -20,7 +23,7 @@ def do_alertmanager(event):
             alert["generatorURL"],
         )
 
-        logging.info("Sending alertmanager message: {}".format(message))
+        logger.info("Sending message: {}".format(message))
 
         MessengerClient(access_token=os.environ["FB_PAGE_ACCESS_TOKEN"]).send_message(
             os.environ["FB_OWNER_ID"], message
