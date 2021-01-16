@@ -1,10 +1,11 @@
-dist/mbot-relay.zip: mbot-relay/lambda_function.py
-	cd mbot-relay; pip install --target ./packages -r requirements.txt
-	cd mbot-relay/packages; zip -r ../../dist/mbot-relay.zip *
-	cd mbot-relay/; zip -r ../dist/mbot-relay.zip lambda_function.py
+dist/mbot.zip: lambda_function.py requirements.txt
+	pip install --target dist/packages -r requirements.txt
+	rm -f dist/mbot.zip
+	cd dist/packages; zip -r ../mbot.zip *
+	zip -r dist/mbot.zip lambda_function.py
 
-deploy-mbot-relay: dist/mbot-relay.zip
-	aws lambda update-function-code --region us-east-1 --function-name mbot-relay --zip-file fileb://dist/mbot-relay.zip
+deploy: dist/mbot.zip
+	aws lambda update-function-code --region us-east-1 --function-name mbot --zip-file fileb://dist/mbot.zip
 
 clean:
 	rm dist/*.zip

@@ -3,6 +3,7 @@ import json
 import logging
 
 import requests
+from lambdarest import lambda_handler, Response
 
 
 def send_message_to_owner(message):
@@ -20,24 +21,18 @@ def send_message_to_owner(message):
     logging.info("Response: {} {}".format(resp.status_code, resp.json()))
 
 
-def make_response(payload, status_code):
-    return {
-        "isBase64Encoded": False,
-        "statusCode": status_code,
-        "headers": {},
-        "body": json.dumps(payload),
-    }
-
-
-def lambda_handler(event, context):
+@lambda_handler.handle("post", path="/relay")
+def do_relay(event):
     if (
         ("secret" not in event)
         or ("MBOT_RELAY_SECRET" not in os.environ)
         or (event["secret"] != os.environ["MBOT_RELAY_SECRET"])
     ):
-        return make_response({"success": False, "error": "No valid secret given."}, 403)
+        return Response(
+            body={"success": False, "error": "No valid secret given."}, status_code=403
+        )
 
     send_message_to_owner(event["message"])
 
-    return make_response({"success": True}, 200)
+    return {"success": True}
 

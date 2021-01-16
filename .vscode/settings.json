@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "dist/packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        "dist/packages"
+    ]
+}

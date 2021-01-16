@@ -1,0 +1,2 @@
+requests==2.25.1
+lambdarest==10.1.0

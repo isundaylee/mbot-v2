@@ -2,9 +2,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Deploy: mbot-relay",
+            "label": "Build",
             "type": "shell",
-            "command": "make deploy-mbot-relay",
+            "command": "make dist/mbot.zip",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Deploy",
+            "type": "shell",
+            "command": "make deploy",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
