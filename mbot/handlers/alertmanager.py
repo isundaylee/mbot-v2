@@ -1,7 +1,7 @@
 import logging
 import os
 
-from mbot.messenger import MessengerClient
+from mbot.utils.messenger import MessengerClient
 
 
 logger = logging.getLogger("mbot.handlers.alertmanager")

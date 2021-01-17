@@ -1,4 +1,4 @@
-from mbot.messenger import MessengerClient
+from mbot.utils.messenger import MessengerClient
 
 
 class Bot:

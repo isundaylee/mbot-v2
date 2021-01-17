@@ -2,7 +2,7 @@ import os
 
 from lambdarest import Response
 
-from mbot.messenger import MessengerClient
+from mbot.utils.messenger import MessengerClient
 
 
 def do_relay(event):

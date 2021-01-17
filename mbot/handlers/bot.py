@@ -5,7 +5,7 @@ from lambdarest import Response
 
 from mbot.bot.features.google_apps_recorder import GoogleAppsRecorderFeature
 from mbot.bot.bot import Bot
-from mbot.messenger import MessengerClient
+from mbot.utils.messenger import MessengerClient
 from mbot.utils.google_apps import GoogleApps
 
 
