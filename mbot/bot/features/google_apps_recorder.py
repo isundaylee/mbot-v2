@@ -1,5 +1,6 @@
 from typing import Optional, List
 
+from mbot.bot.action_kit import ActionKit
 from mbot.utils.google_apps import GoogleApps
 
 _GOOGLE_APPS_RECORD_TYPES = {
@@ -16,8 +17,7 @@ class GoogleAppsRecorderFeature:
     def __init__(self, google_apps):
         self.google_apps = google_apps
 
-    # TODO: refactor this into using actions
-    def process(self, message: str) -> Optional[List[str]]:
+    def process(self, message: str, action_kit: ActionKit) -> bool:
         tokens = message.split()
 
         for phrases in _GOOGLE_APPS_RECORD_TYPES:
@@ -26,12 +26,16 @@ class GoogleAppsRecorderFeature:
             if tokens[0].lower() not in phrases:
                 continue
 
-            # TODO: early feedback?
+            action_kit.send_message_to_owner(f"Recording your {name}...")
             try:
                 self.google_apps.record(item, tokens[1 : num_fields + 1])
-                return [f"Successfully recorded your {name}!"]
+                action_kit.send_message_to_owner(f"Successfully recorded your {name}!")
             except Exception as e:
-                return [f"Error while recording your {name}: {e}"]
+                action_kit.send_message_to_owner(
+                    f"Error while recording your {name}: {e}"
+                )
 
-        return None
+            return True
+
+        return False
 
