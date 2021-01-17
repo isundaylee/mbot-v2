@@ -10,7 +10,9 @@ from mbot.handlers.bot import do_bot_get, do_bot_post
 
 logging.getLogger().setLevel(logging.INFO)
 for handler in logging.getLogger().handlers:
-    handler.setFormatter(logging.Formatter(fmt="%(levelname)s %(message)s"))
+    handler.setFormatter(
+        logging.Formatter(fmt="%(levelname)s - %(name)s - %(message)s")
+    )
 
 lambda_handler.handle("post", path="/relay")(do_relay)
 

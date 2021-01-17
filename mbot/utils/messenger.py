@@ -3,7 +3,7 @@ import logging
 import requests
 
 
-logger = logging.getLogger("mbot.messenger")
+logger = logging.getLogger("mbot.utils.messenger")
 
 
 class MessengerClient:

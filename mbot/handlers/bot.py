@@ -33,7 +33,7 @@ def do_bot_get(event):
 def do_bot_post(event):
     data = event["json"]["body"]
 
-    logging.info("received %s", str(data))
+    logger.info("received %s", str(data))
 
     if data["object"] != "page":
         return ""
@@ -57,14 +57,14 @@ def do_bot_post(event):
 
         for messaging in entry["messaging"]:
             if messaging["sender"]["id"] != os.environ.get("FB_OWNER_ID"):
-                logging.warning(
+                logger.warning(
                     "Ignored message from ID {}".format(messaging["sender"]["id"])
                 )
                 continue
 
             text = messaging["message"]["text"]
 
-            logging.info("Processing message: %s", text)
+            logger.info("Processing message: %s", text)
             bot.process_message(text)
 
     return "EVENT_RECEIVED"
