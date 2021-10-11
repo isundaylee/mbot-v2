@@ -4,11 +4,11 @@ from mbot.bot.action_kit import ActionKit
 from mbot.utils.google_apps import GoogleApps
 
 _GOOGLE_APPS_RECORD_TYPES = {
-    ("b", "bp"): ("blood_pressure", "blood pressure reading", 4),
+    ("b", "bp"): ("blood_pressure", "blood pressure reading", 3),
     ("h", "hr", "heart"): ("heartrate", "heart rate reading", 1),
-    ("j", "jog", "jogging"): ("jogging", "jogging distance", 1),
-    ("w", "weight"): ("weight", "body weight", 1),
-    ("p", "press"): ("press", "press workout", 3),
+    ("j", "jog", "jogging"): ("jogging", "jogging distance reading", 1),
+    ("w", "weight"): ("weight", "body weight reading", 1),
+    ("p", "press"): ("press", "press workout reading", 3),
     ("ot", "otemp"): ("oral_temperature", "oral temperature reading", 1),
 }
 
@@ -26,16 +26,21 @@ class GoogleAppsRecorderFeature:
             if tokens[0].lower() not in phrases:
                 continue
 
-            action_kit.send_message_to_owner(f"Recording your {name}...")
+            if len(tokens) < num_fields + 1:
+                action_kit.send_message_to_owner(
+                    f"Not enough fields given for a {name}."
+                )
+                return True
+
+            action_kit.send_message_to_owner(f"Saving the {name}...")
             try:
-                self.google_apps.record(item, tokens[1 : num_fields + 1])
-                action_kit.send_message_to_owner(f"Successfully recorded your {name}!")
+                self.google_apps.record(item, tokens[1:])
+                action_kit.send_message_to_owner(f"Successfully saved the {name}!")
             except Exception as e:
                 action_kit.send_message_to_owner(
-                    f"Error while recording your {name}: {e}"
+                    f"Error while saving the {name}: {e}"
                 )
 
             return True
 
         return False
-
