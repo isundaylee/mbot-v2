@@ -31,7 +31,7 @@ class GoogleApps:
             "sheets", "v4", http=self.http, discoveryServiceUrl=discoveryURL
         )
 
-        total_rows = 2000
+        total_rows = 3000
 
         vacant_row = None
         result = (
