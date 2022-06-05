@@ -16,7 +16,12 @@ class MessengerClient:
         )
         resp = requests.post(
             address,
-            json={"recipient": {"id": recipient_id}, "message": {"text": message}},
+            json={
+                "recipient": {"id": recipient_id},
+                "message": {"text": message},
+                "message_type": "MESSAGE_TAG",
+                "tag": "ACCOUNT_UPDATE",
+            },
         )
         resp.raise_for_status()
 
