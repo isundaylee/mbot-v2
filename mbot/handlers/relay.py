@@ -17,8 +17,11 @@ def do_relay(event):
             body={"success": False, "error": "No valid secret given."}, status_code=403
         )
 
-    MessengerClient(access_token=os.environ["FB_PAGE_ACCESS_TOKEN"]).send_message(
-        os.environ["FB_OWNER_ID"], data["message"]
-    )
+    try:
+        MessengerClient(access_token=os.environ["FB_PAGE_ACCESS_TOKEN"]).send_message(
+            os.environ["FB_OWNER_ID"], data["message"]
+        )
+    except Exception as e:
+        return {"success": False, "error": repr(e)}
 
     return {"success": True}

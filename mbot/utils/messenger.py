@@ -18,6 +18,7 @@ class MessengerClient:
             address,
             json={"recipient": {"id": recipient_id}, "message": {"text": message}},
         )
+        resp.raise_for_status()
 
         logger.info(
             "send_message() got response: {} {}".format(resp.status_code, resp.json())

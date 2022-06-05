@@ -25,8 +25,11 @@ def do_alertmanager(event):
 
         logger.info("Sending message: {}".format(message))
 
-        MessengerClient(access_token=os.environ["FB_PAGE_ACCESS_TOKEN"]).send_message(
-            os.environ["FB_OWNER_ID"], message
-        )
+        try:
+            MessengerClient(
+                access_token=os.environ["FB_PAGE_ACCESS_TOKEN"]
+            ).send_message(os.environ["FB_OWNER_ID"], message)
+        except Exception as e:
+            return {"success": False, "error": repr(e)}
 
     return {"success": True}
