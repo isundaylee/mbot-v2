@@ -9,7 +9,9 @@ _GOOGLE_APPS_RECORD_TYPES = {
     ("j", "jog", "jogging"): ("jogging", "jogging distance reading", 1),
     ("w", "weight"): ("weight", "body weight reading", 1),
     ("p", "press"): ("press", "press workout reading", 3),
-    ("ot", "otemp"): ("oral_temperature", "oral temperature reading", 1),
+    ("t", "temp"): ("temperature", "temperature reading", 1),
+    ("f", "food"): ("food", "food", 1),
+    ("c", "comment"): ("comment", "comment", 1),
 }
 
 
