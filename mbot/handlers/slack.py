@@ -3,6 +3,8 @@ import json
 import logging
 import os
 from typing import Any
+from mbot.bot.action_kit import SlackActionKit
+from mbot.bot.bot import Bot, build_default_features
 
 from slack_sdk import signature
 import slack_sdk
@@ -16,18 +18,16 @@ def _get_slack_client() -> slack_sdk.WebClient:
 
 
 def _handle_event(event: dict[str, Any]) -> None:
-    def _reply(message: str) -> None:
-        client = _get_slack_client()
-        client.chat_postMessage(
-            channel=event["channel"], thread_ts=event["ts"], text=message
-        )
-
     match event_type := event["type"]:
         case "message":
             if "bot_id" in event:
                 return
 
-            _reply("Hello you")
+            bot = Bot(
+                build_default_features(),
+                SlackActionKit(_get_slack_client(), event["channel"], event["ts"]),
+            )
+            bot.process_message(event["text"])
         case _:
             raise RuntimeError(f"Invalid event type {event_type}")
 

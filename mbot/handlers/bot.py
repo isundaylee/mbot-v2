@@ -2,9 +2,10 @@ import os
 import logging
 
 from lambdarest import Response
+from mbot.bot.action_kit import MessengerActionKit
 
 from mbot.bot.features.google_apps_recorder import GoogleAppsRecorderFeature
-from mbot.bot.bot import Bot
+from mbot.bot.bot import Bot, build_default_features
 from mbot.utils.messenger import MessengerClient
 from mbot.utils.google_apps import GoogleApps
 
@@ -39,16 +40,11 @@ def do_bot_post(event):
         return ""
 
     bot = Bot(
-        [
-            GoogleAppsRecorderFeature(
-                GoogleApps(
-                    os.environ["MBOT_GA_CREDENTIALS"],
-                    os.environ["MBOT_GA_BP_SPREADSHEET_ID"],
-                )
-            )
-        ],
-        MessengerClient(os.environ["FB_PAGE_ACCESS_TOKEN"]),
-        os.environ["FB_OWNER_ID"],
+        build_default_features(),
+        MessengerActionKit(
+            MessengerClient(os.environ["FB_PAGE_ACCESS_TOKEN"]),
+            os.environ["FB_OWNER_ID"],
+        ),
     )
 
     for entry in data["entry"]:

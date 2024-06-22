@@ -1,6 +1,7 @@
+import abc
 from typing import Optional, List
+from mbot.bot.action_kit import BaseActionKit
 
-from mbot.bot.action_kit import ActionKit
 from mbot.utils.google_apps import GoogleApps
 
 _GOOGLE_APPS_RECORD_TYPES = {
@@ -15,11 +16,17 @@ _GOOGLE_APPS_RECORD_TYPES = {
 }
 
 
-class GoogleAppsRecorderFeature:
+class BaseFeature(abc.ABC):
+    @abc.abstractmethod
+    def process(self, message: str, action_kit: BaseActionKit) -> bool:
+        pass
+
+
+class GoogleAppsRecorderFeature(BaseFeature):
     def __init__(self, google_apps):
         self.google_apps = google_apps
 
-    def process(self, message: str, action_kit: ActionKit) -> bool:
+    def process(self, message: str, action_kit: BaseActionKit) -> bool:
         tokens = message.split()
 
         for phrases in _GOOGLE_APPS_RECORD_TYPES:
@@ -39,9 +46,7 @@ class GoogleAppsRecorderFeature:
                 self.google_apps.record(item, tokens[1:])
                 action_kit.send_message_to_owner(f"Successfully saved the {name}!")
             except Exception as e:
-                action_kit.send_message_to_owner(
-                    f"Error while saving the {name}: {e}"
-                )
+                action_kit.send_message_to_owner(f"Error while saving the {name}: {e}")
 
             return True
 
