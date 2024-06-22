@@ -1,5 +1,3 @@
-import os
-import json
 import logging
 
 from lambdarest import lambda_handler

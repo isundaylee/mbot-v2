@@ -1,35 +1,28 @@
-import functools
 import json
 import logging
 import os
 from typing import Any
-from mbot.bot.action_kit import SlackActionKit
-from mbot.bot.bot import Bot, build_default_features
 
 from slack_sdk import signature
-import slack_sdk
+import boto3
 
 logger = logging.getLogger(__name__)
 
 
-@functools.cache
-def _get_slack_client() -> slack_sdk.WebClient:
-    return slack_sdk.WebClient(os.environ["SLACK_BOT_USER_TOKEN"])
-
-
 def _handle_event(event: dict[str, Any]) -> None:
-    match event_type := event["type"]:
-        case "message":
-            if "bot_id" in event:
-                return
+    boto_client = boto3.client("lambda")
+    response = boto_client.invoke(
+        FunctionName="mbot_backend",
+        InvocationType="Event",
+        Payload=json.dumps({"request_type": "slack_event", "slack_event": event}),
+    )
 
-            bot = Bot(
-                build_default_features(),
-                SlackActionKit(_get_slack_client(), event["channel"], event["ts"]),
-            )
-            bot.process_message(event["text"])
-        case _:
-            raise RuntimeError(f"Invalid event type {event_type}")
+    logger.info("Response from mbot_backend invocation: %s", response)
+
+    if response["ResponseMetadata"]["HTTPStatusCode"] != 202:
+        raise RuntimeError(
+            f"Unexpected response from invoking mbot_backend: {response}"
+        )
 
 
 def do_slack_post(event: dict[str, Any]) -> Any:
@@ -51,5 +44,3 @@ def do_slack_post(event: dict[str, Any]) -> Any:
             _handle_event(json_body["event"])
         case _:
             raise RuntimeError(f"Invalid request type {request_type}")
-
-    # client = slack_sdk.WebClient(os.environ["SLACK_BOT_USER_TOKEN"])
