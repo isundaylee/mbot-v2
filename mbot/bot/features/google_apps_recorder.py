@@ -12,7 +12,7 @@ _GOOGLE_APPS_RECORD_TYPES = {
     ("p", "press"): ("press", "press workout reading", 3),
     ("t", "temp"): ("temperature", "temperature reading", 1),
     ("f", "food"): ("food", "food", 1),
-    ("c", "comment"): ("comment", "comment", 1),
+    ("c", "comment"): ("comment", "comment", None),
 }
 
 
@@ -35,15 +35,28 @@ class GoogleAppsRecorderFeature(BaseFeature):
             if tokens[0].lower() not in phrases:
                 continue
 
-            if len(tokens) < num_fields + 1:
-                action_kit.send_message_to_owner(
-                    f"Not enough fields given for a {name}."
-                )
-                return True
+            # If num_fields is None, treat everything after the first token as a single field
+            if num_fields is None:
+                if len(tokens) < 2:
+                    action_kit.send_message_to_owner(
+                        f"Not enough fields given for a {name}."
+                    )
+                    return True
+                
+                # Join all tokens after the first one as a single string
+                values = [" ".join(tokens[1:])]
+            else:
+                if len(tokens) < num_fields + 1:
+                    action_kit.send_message_to_owner(
+                        f"Not enough fields given for a {name}."
+                    )
+                    return True
+                
+                values = tokens[1:]
 
             action_kit.send_message_to_owner(f"Saving the {name}...")
             try:
-                self.google_apps.record(item, tokens[1:])
+                self.google_apps.record(item, values)
                 action_kit.send_message_to_owner(f"Successfully saved the {name}!")
             except Exception as e:
                 action_kit.send_message_to_owner(f"Error while saving the {name}: {e}")
