@@ -13,7 +13,11 @@ dist/mbot_backend.zip: dist/packages.zip lambda_function_backend.py $(shell find
 	zip -r dist/mbot_backend.zip lambda_function_backend.py
 	zip -r dist/mbot_backend.zip mbot
 
-deploy: dist/mbot.zip
+.PHONY: deploy deploy_frontend deploy_backend clean
+
+deploy: deploy_frontend deploy_backend
+
+deploy_frontend: dist/mbot.zip
 	aws lambda update-function-code --region us-east-1 --function-name mbot --zip-file fileb://dist/mbot.zip
 
 deploy_backend: dist/mbot_backend.zip
